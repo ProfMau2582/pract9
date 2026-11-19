@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Práctica de Trigonometría · Noveno</title>
+<style>
+:root{
+  --bg:#f6f5f2; --card:#ffffff; --ink:#1f2328; --muted:#5f6670; --line:#d8d6cf;
+  --accent:#185FA5; --accent-soft:#e6f0fa;
+  --ok:#0F6E56; --ok-soft:#e3f4ee; --bad:#b3261e; --bad-soft:#fbe9e7;
+  --warn:#9a5b00; --warn-soft:#fff3d6; --fig:#1f2328; --fig-accent:#D4621A;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#16181b; --card:#1f2226; --ink:#e8e6e1; --muted:#a3a8ae; --line:#373b41;
+    --accent:#6ea8e6; --accent-soft:#1d2a38;
+    --ok:#5fc9a6; --ok-soft:#163029; --bad:#f08a80; --bad-soft:#3a1f1d;
+    --warn:#e8b45a; --warn-soft:#382c15; --fig:#e8e6e1; --fig-accent:#f0955a;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Century Gothic","Avenir Next","Segoe UI",system-ui,sans-serif;line-height:1.55}
+.wrap{max-width:820px;margin:0 auto;padding:24px 16px 80px}
+header.top{border-bottom:3px solid var(--accent);padding-bottom:14px;margin-bottom:22px}
+.school{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+h1{margin:.2em 0 .1em;font-size:1.7rem}
+.sub{color:var(--muted);margin:0}
+.intro{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:22px}
+.intro ul{margin:.4em 0 0;padding-left:1.2em}
+.name{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.name input{flex:1;min-width:200px}
+input[type=text]{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+h2{font-size:1.15rem;margin:34px 0 12px;padding-left:10px;border-left:5px solid var(--accent)}
+.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px}
+.q.ok{border-color:var(--ok)} .q.bad{border-color:var(--bad)}
+.qhead{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.qnum{font-weight:700;color:var(--accent);white-space:nowrap}
+.tag{font-size:.75rem;color:var(--muted);white-space:nowrap}
+.stem{margin:.3em 0 .6em}
+.fig{display:flex;justify-content:center;margin:6px 0 10px}
+.fig svg{max-width:100%;height:auto}
+.opts{display:grid;gap:8px;margin:8px 0}
+.opt{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer;background:var(--bg)}
+.opt:hover{border-color:var(--accent)}
+.opt input{accent-color:var(--accent)}
+.opt.sel-ok{background:var(--ok-soft);border-color:var(--ok)}
+.opt.sel-bad{background:var(--bad-soft);border-color:var(--bad)}
+.numrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:8px 0}
+.numrow input{width:140px}
+.unit{color:var(--muted)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+button{font:inherit;cursor:pointer;border-radius:8px;padding:7px 14px;border:1px solid var(--accent);background:var(--accent);color:#fff}
+button.ghost{background:transparent;color:var(--accent)}
+button:disabled{opacity:.5;cursor:default}
+.fb{margin-top:10px;padding:10px 12px;border-radius:8px;display:none}
+.fb.show{display:block}
+.fb.ok{background:var(--ok-soft);color:var(--ok)}
+.fb.bad{background:var(--bad-soft);color:var(--bad)}
+.fb.warn{background:var(--warn-soft);color:var(--warn)}
+.fb .fbtext{color:var(--ink)}
+.sol{margin-top:10px;padding:10px 12px;border-radius:8px;border:1px dashed var(--line);display:none;font-size:.95rem}
+.sol.show{display:block}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.92em;margin:0 2px}
+.frac span:first-child{border-bottom:1px solid currentColor;padding:0 3px}
+.ref{background:var(--accent-soft);border-radius:10px;padding:12px 16px;margin:10px 0 0;font-size:.93rem}
+.ref table{border-collapse:collapse;margin-top:6px}
+.ref td{padding:2px 14px 2px 0}
+.summary{position:sticky;bottom:0;background:var(--card);border-top:2px solid var(--accent);padding:12px 16px;margin:30px -16px 0;display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+.score{font-weight:700;font-size:1.05rem}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;flex:1;min-width:120px}
+.bar div{height:100%;background:var(--ok);width:0;transition:width .3s}
+.report{display:none;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-top:18px}
+.report.show{display:block}
+.report table{width:100%;border-collapse:collapse;font-size:.92rem}
+.report th,.report td{border-bottom:1px solid var(--line);padding:6px 4px;text-align:left}
+@media print{.summary,.actions,button{display:none!important}.sol{display:block!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div class="school">Vista Atenas High School · Prof. Mauricio Torres Artavia</div>
+  <h1>Práctica: Razones trigonométricas</h1>
+  <p class="sub">Ángulos de elevación y depresión · Problemas de aplicación · Noveno · Preparación para la prueba parcial</p>
+</header>
+
+<section class="intro">
+  <strong>Instrucciones</strong>
+  <ul>
+    <li>Resuelva cada ejercicio en su cuaderno y luego marque o escriba su respuesta.</li>
+    <li>Presione <em>Revisar</em> para recibir retroalimentación. Puede intentarlo de nuevo cuantas veces quiera.</li>
+    <li>En las respuestas numéricas escriba el resultado con <strong>dos decimales</strong> (puede usar coma o punto).</li>
+    <li>Verifique que su calculadora esté en modo <strong>DEG</strong> (grados).</li>
+  </ul>
+  <div class="ref">
+    <strong>Recuerde</strong>
+    <table>
+      <tr><td>sen θ = op / hip</td><td>csc θ = hip / op</td></tr>
+      <tr><td>cos θ = ady / hip</td><td>sec θ = hip / ady</td></tr>
+      <tr><td>tan θ = op / ady</td><td>cot θ = ady / op</td></tr>
+    </table>
+  </div>
+  <div class="name"><label for="nombre">Nombre:</label><input type="text" id="nombre" placeholder="Escriba su nombre completo"></div>
+</section>
+
+<div id="quiz"></div>
+
+<section class="report" id="report">
+  <h3 style="margin-top:0">Resumen de resultados</h3>
+  <p id="reportHead"></p>
+  <table><thead><tr><th>#</th><th>Tema</th><th>Resultado</th><th>Intentos</th></tr></thead><tbody id="reportBody"></tbody></table>
+  <div class="actions" style="margin-top:12px">
+    <button onclick="window.print()">Imprimir o guardar PDF</button>
+    <button class="ghost" onclick="copyReport()">Copiar resumen</button>
+  </div>
+</section>
+
+<div class="summary">
+  <span class="score" id="score">0 / 0 correctas</span>
+  <div class="bar"><div id="barFill"></div></div>
+  <button onclick="showReport()">Ver resumen</button>
+  <button class="ghost" onclick="resetAll()">Reiniciar</button>
+</div>
+
+</div>
+
+<script>
+/* ===================== Figuras ===================== */
+// Triángulo rectángulo: vértice A (ángulo) abajo-izquierda, recto abajo-derecha, C arriba-derecha
+function tri({w=240,h=130,base="",alt="",hip="",ang="",angTop="",angTopLbl=""}={}){
+  const x0=30,y0=h+20,x1=x0+w,y1=20;
+  const a=Math.atan2(h,w), r=34;
+  const ax=x0+r*Math.cos(0), ay=y0, bx=x0+r*Math.cos(a), by=y0-r*Math.sin(a);
+  let topArc="";
+  if(angTop){
+    const b=Math.atan2(w,h), r2=26;
+    topArc=`<path d="M ${x1} ${y1+r2} A ${r2} ${r2} 0 0 1 ${x1-r2*Math.sin(b)} ${y1+r2*Math.cos(b)}" fill="none" stroke="var(--fig-accent)" stroke-width="2"/>
+      <text x="${x1-14}" y="${y1+r2+18}" fill="var(--fig-accent)" font-size="15" font-style="italic">${angTopLbl}</text>`;
+  }
+  return `<svg viewBox="0 0 ${w+110} ${h+60}" width="${w+110}" role="img" aria-label="Triángulo rectángulo">
+    <polygon points="${x0},${y0} ${x1},${y0} ${x1},${y1}" fill="none" stroke="var(--fig)" stroke-width="2.5" stroke-linejoin="round"/>
+    <rect x="${x1-14}" y="${y0-14}" width="14" height="14" fill="none" stroke="var(--fig)" stroke-width="1.5"/>
+    <path d="M ${ax} ${ay} A ${r} ${r} 0 0 0 ${bx} ${by}" fill="none" stroke="var(--fig-accent)" stroke-width="2"/>
+    <text x="${x0+r+6}" y="${y0-8}" fill="var(--fig-accent)" font-size="15" font-style="italic">${ang}</text>
+    <text x="${(x0+x1)/2}" y="${y0+20}" text-anchor="middle" fill="var(--fig)" font-size="15">${base}</text>
+    <text x="${x1+8}" y="${(y0+y1)/2+5}" fill="var(--fig)" font-size="15">${alt}</text>
+    <text x="${(x0+x1)/2-10}" y="${(y0+y1)/2-8}" text-anchor="end" fill="var(--fig)" font-size="15">${hip}</text>
+    ${topArc}
+  </svg>`;
+}
+function svgTree(){
+ return `<svg viewBox="0 0 340 190" width="340" role="img" aria-label="Estudiante observa la copa de un árbol">
+  <line x1="10" y1="170" x2="330" y2="170" stroke="var(--fig)" stroke-width="2"/>
+  <circle cx="40" cy="146" r="7" fill="none" stroke="var(--fig)" stroke-width="2"/><line x1="40" y1="153" x2="40" y2="170" stroke="var(--fig)" stroke-width="2"/>
+  <line x1="280" y1="170" x2="280" y2="60" stroke="var(--fig)" stroke-width="5"/>
+  <circle cx="280" cy="48" r="26" fill="none" stroke="var(--ok)" stroke-width="2.5"/>
+  <line x1="40" y1="170" x2="280" y2="35" stroke="var(--fig-accent)" stroke-width="2" stroke-dasharray="6 4"/>
+  <path d="M 85 170 A 45 45 0 0 0 79 148" fill="none" stroke="var(--fig-accent)" stroke-width="2"/>
+  <text x="90" y="160" fill="var(--fig-accent)" font-size="14">38°</text>
+  <text x="160" y="186" text-anchor="middle" fill="var(--fig)" font-size="14">25 m</text>
+  <text x="292" y="120" fill="var(--fig)" font-size="14">h = ?</text>
+ </svg>`;}
+function svgLighthouse(){
+ return `<svg viewBox="0 0 360 190" width="360" role="img" aria-label="Faro y barco con ángulo de depresión">
+  <path d="M10 172 Q 90 166 180 172 T 350 172" fill="none" stroke="var(--accent)" stroke-width="2"/>
+  <polygon points="30,170 48,40 66,40 84,170" fill="none" stroke="var(--fig)" stroke-width="2.5"/>
+  <line x1="57" y1="40" x2="300" y2="40" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <line x1="57" y1="40" x2="300" y2="165" stroke="var(--fig-accent)" stroke-width="2"/>
+  <path d="M 120 40 A 63 63 0 0 1 113 69" fill="none" stroke="var(--fig-accent)" stroke-width="2"/>
+  <text x="124" y="62" fill="var(--fig-accent)" font-size="14">22°</text>
+  <polygon points="285,160 318,160 312,170 291,170" fill="var(--fig)"/>
+  <text x="8" y="110" fill="var(--fig)" font-size="14">40 m</text>
+  <text x="185" y="186" text-anchor="middle" fill="var(--fig)" font-size="14">d = ?</text>
+ </svg>`;}
+function svgKite(){
+ return `<svg viewBox="0 0 340 200" width="340" role="img" aria-label="Cometa con hilo de 50 m">
+  <line x1="10" y1="180" x2="330" y2="180" stroke="var(--fig)" stroke-width="2"/>
+  <circle cx="40" cy="146" r="7" fill="none" stroke="var(--fig)" stroke-width="2"/><line x1="40" y1="153" x2="40" y2="180" stroke="var(--fig)" stroke-width="2"/>
+  <line x1="40" y1="160" x2="270" y2="160" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <line x1="40" y1="160" x2="270" y2="30" stroke="var(--fig-accent)" stroke-width="2"/>
+  <polygon points="270,14 284,30 270,46 256,30" fill="none" stroke="var(--ok)" stroke-width="2.5"/>
+  <path d="M 92 160 A 52 52 0 0 0 85 135" fill="none" stroke="var(--fig-accent)" stroke-width="2"/>
+  <text x="98" y="152" fill="var(--fig-accent)" font-size="14">35°</text>
+  <text x="150" y="88" fill="var(--fig)" font-size="14">50 m</text>
+  <text x="30" y="172" text-anchor="end" fill="var(--fig)" font-size="11">1,5 m</text>
+  <line x1="300" y1="180" x2="300" y2="30" stroke="var(--muted)" stroke-width="1"/>
+  <text x="306" y="105" fill="var(--fig)" font-size="14">H = ?</text>
+ </svg>`;}
+function svgBuildings(){
+ return `<svg viewBox="0 0 360 220" width="360" role="img" aria-label="Dos edificios con ángulos de elevación y depresión">
+  <line x1="10" y1="200" x2="350" y2="200" stroke="var(--fig)" stroke-width="2"/>
+  <rect x="30" y="90" width="40" height="110" fill="none" stroke="var(--fig)" stroke-width="2.5"/>
+  <rect x="270" y="40" width="50" height="160" fill="none" stroke="var(--fig)" stroke-width="2.5"/>
+  <line x1="70" y1="90" x2="270" y2="90" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <line x1="70" y1="90" x2="270" y2="200" stroke="var(--fig-accent)" stroke-width="2"/>
+  <line x1="70" y1="90" x2="270" y2="40" stroke="var(--ok)" stroke-width="2"/>
+  <path d="M 125 90 A 55 55 0 0 1 118 116" fill="none" stroke="var(--fig-accent)" stroke-width="2"/>
+  <text x="128" y="114" fill="var(--fig-accent)" font-size="13">40°</text>
+  <path d="M 125 90 A 55 55 0 0 0 123 76" fill="none" stroke="var(--ok)" stroke-width="2"/>
+  <text x="128" y="80" fill="var(--ok)" font-size="13">20°</text>
+  <text x="26" y="150" text-anchor="end" fill="var(--fig)" font-size="13">30 m</text>
+  <text x="170" y="215" text-anchor="middle" fill="var(--fig)" font-size="13">d = ?</text>
+  <text x="326" y="125" fill="var(--fig)" font-size="13">H = ?</text>
+ </svg>`;}
+
+const F=(n,d)=>`<span class="frac"><span>${n}</span><span>${d}</span></span>`;
+const fig81517=tri({w:240,h:128,base:"15",alt:"8",hip:"17",ang:"α",angTop:true,angTopLbl:"β"});
+
+/* ===================== Preguntas ===================== */
+const Q=[
+/* ---------- Sección 1 ---------- */
+{sec:"1. Identificación de razones trigonométricas", tema:"Razones", type:"mc", fig:fig81517,
+ stem:"Con base en el triángulo, ¿cuál es el valor de sen α?",
+ opts:[F(8,17),F(15,17),F(8,15),F(17,8)], ans:0,
+ fb:[ "",
+  "Ese cociente usa el cateto adyacente: corresponde a cos α. El seno usa el cateto <b>opuesto</b> sobre la hipotenusa.",
+  "Ese cociente es opuesto sobre adyacente, es decir tan α. El seno divide entre la <b>hipotenusa</b>.",
+  "Invirtió el cociente: hip/op es csc α, el recíproco del seno."],
+ sol:"sen α = opuesto / hipotenusa = 8/17."},
+{tema:"Razones", type:"mc", fig:fig81517,
+ stem:"Con el mismo triángulo, ¿cuál es el valor de cos α?",
+ opts:[F(8,17),F(17,15),F(15,17),F(15,8)], ans:2,
+ fb:["Ese es sen α. El coseno usa el cateto <b>adyacente</b>.",
+  "Invirtió el cociente: hip/ady es sec α.", "",
+  "Ese es cot α (adyacente/opuesto). El coseno divide entre la hipotenusa."],
+ sol:"cos α = adyacente / hipotenusa = 15/17."},
+{tema:"Razones", type:"mc", fig:fig81517,
+ stem:"¿Cuál es el valor de tan α?",
+ opts:[F(8,15),F(15,8),F(8,17),F(17,15)], ans:0,
+ fb:["","Invirtió el cociente: ady/op es cot α. La tangente es opuesto sobre adyacente.",
+  "Ese es sen α. La tangente no usa la hipotenusa.","Ese es sec α."],
+ sol:"tan α = opuesto / adyacente = 8/15."},
+{tema:"Razones", type:"mc", fig:fig81517,
+ stem:"¿Cuál es el valor de csc α?",
+ opts:[F(8,17),F(17,15),F(15,8),F(17,8)], ans:3,
+ fb:["Ese es sen α. La cosecante es su recíproco.","Ese es sec α: hipotenusa entre el <b>adyacente</b>.","Ese es cot α.",""],
+ sol:"csc α = hipotenusa / opuesto = 17/8 (recíproco de sen α)."},
+{tema:"Razones", type:"mc", fig:fig81517,
+ stem:"Ahora observe el ángulo β (arriba). ¿Cuál es el valor de cot β?",
+ opts:[F(15,8),F(8,15),F(8,17),F(17,15)], ans:1,
+ fb:["Ese es cot α. Desde β los catetos cambian de papel: el opuesto a β es 15 y el adyacente es 8.","",
+  "Ese cociente usa la hipotenusa; la cotangente es adyacente sobre opuesto.","Ese es csc β (hip/op)."],
+ sol:"Desde β: opuesto = 15, adyacente = 8. cot β = ady/op = 8/15."},
+
+/* ---------- Sección 2 ---------- */
+{sec:"2. Cálculo de lados y ángulos", tema:"Lados y ángulos", type:"num",
+ fig:tri({w:240,h:138,base:"",alt:"x",hip:"20 cm",ang:"30°"}),
+ stem:"Determine la longitud del cateto x.", unit:"cm", ans:10, tol:0.05,
+ errs:[{v:17.32,m:"Usó cos 30°. El cateto x es <b>opuesto</b> al ángulo de 30°, así que se usa sen."},
+       {v:-19.76,m:"Su calculadora está en modo <b>RAD</b>. Cámbiela a DEG y vuelva a calcular."}],
+ hint:"Relacione el cateto opuesto con la hipotenusa.",
+ sol:"sen 30° = x/20 ⇒ x = 20 · sen 30° = 20 · 0,5 = 10 cm."},
+{tema:"Lados y ángulos", type:"num",
+ fig:tri({w:240,h:120,base:"12 m",alt:"x",hip:"",ang:"40°"}),
+ stem:"Determine la longitud del cateto x. Escriba el resultado con dos decimales.", unit:"m", ans:10.07, tol:0.05,
+ errs:[{v:7.71,m:"Usó sen 40°, pero no conoce la hipotenusa: conoce el adyacente (12 m). Use tangente."},
+       {v:14.30,m:"Despejó al revés: si tan 40° = x/12, entonces x = 12 · tan 40°, no 12 ÷ tan 40°."},
+       {v:-13.41,m:"Su calculadora está en modo <b>RAD</b>. Cámbiela a DEG."}],
+ hint:"Conoce el cateto adyacente y busca el opuesto.",
+ sol:"tan 40° = x/12 ⇒ x = 12 · tan 40° ≈ 12 · 0,8391 ≈ 10,07 m."},
+{tema:"Lados y ángulos", type:"num",
+ fig:tri({w:240,h:100,base:"12 cm",alt:"5 cm",hip:"",ang:"θ"}),
+ stem:"Determine la medida del ángulo θ. Escriba el resultado con dos decimales.", unit:"°", ans:22.62, tol:0.05,
+ errs:[{v:67.38,m:"Invirtió el cociente. tan θ = opuesto/adyacente = 5/12, no 12/5. (Ese valor es el otro ángulo agudo.)"},
+       {v:0.39,m:"Su calculadora está en modo <b>RAD</b>; el resultado salió en radianes. Cámbiela a DEG."}],
+ hint:"Use la función inversa tan⁻¹.",
+ sol:"tan θ = 5/12 ⇒ θ = tan⁻¹(5/12) ≈ 22,62°."},
+{tema:"Lados y ángulos", type:"num",
+ fig:tri({w:240,h:150,base:"x",alt:"",hip:"15 m",ang:"55°"}),
+ stem:"Determine la longitud del cateto x. Escriba el resultado con dos decimales.", unit:"m", ans:8.60, tol:0.05,
+ errs:[{v:12.29,m:"Usó sen 55°. El cateto x es <b>adyacente</b> al ángulo, así que se usa cos."},
+       {v:0.33,m:"Su calculadora está en modo <b>RAD</b>. Cámbiela a DEG."}],
+ hint:"Relacione el cateto adyacente con la hipotenusa.",
+ sol:"cos 55° = x/15 ⇒ x = 15 · cos 55° ≈ 15 · 0,5736 ≈ 8,60 m."},
+
+/* ---------- Sección 3 ---------- */
+{sec:"3. Ángulos de elevación y depresión", tema:"Elevación/depresión", type:"mc",
+ stem:"Desde lo alto de una torre, un vigilante ve un carro con un ángulo de depresión de 30°. ¿Cuánto mide el ángulo de elevación con que el conductor del carro ve al vigilante?",
+ opts:["30°","60°","90°","150°"], ans:0,
+ fb:["","Restó de 90°. Los ángulos de elevación y depresión entre dos mismos puntos son <b>iguales</b> (alternos internos entre paralelas).",
+  "La línea de visión no es perpendicular al suelo.","Ese es el suplemento. Ambos ángulos se miden desde la <b>horizontal</b> y son iguales."],
+ sol:"La horizontal del vigilante es paralela al suelo, por lo que el ángulo de depresión y el de elevación son alternos internos: miden lo mismo, 30°."},
+{tema:"Elevación/depresión", type:"mc",
+ stem:"Un ángulo de depresión se mide entre…",
+ opts:["la línea de visión y la vertical","la horizontal del observador y la línea de visión hacia abajo","el suelo y la vertical del objeto","la horizontal del observador y la línea de visión hacia arriba"], ans:1,
+ fb:["Ambos ángulos (elevación y depresión) se miden desde la <b>horizontal</b>, no desde la vertical.","",
+  "Ese ángulo es recto; no es el de depresión.","Esa definición corresponde al ángulo de <b>elevación</b>."],
+ sol:"El ángulo de depresión está entre la horizontal que pasa por los ojos del observador y la línea de visión dirigida hacia abajo."},
+{tema:"Elevación/depresión", type:"num", fig:svgTree(),
+ stem:"Una estudiante está a 25 m de la base de un árbol y observa la copa con un ángulo de elevación de 38° (suponga que mira desde el suelo). ¿Cuál es la altura del árbol?", unit:"m", ans:19.53, tol:0.05,
+ errs:[{v:15.39,m:"Usó sen 38°, pero los 25 m son el cateto <b>adyacente</b>, no la hipotenusa. Use tangente."},
+       {v:32.00,m:"Despejó al revés: h = 25 · tan 38°, no 25 ÷ tan 38°."},
+       {v:7.76,m:"Su calculadora está en modo <b>RAD</b>. Cámbiela a DEG."}],
+ hint:"La altura es el cateto opuesto al ángulo y la distancia al árbol es el adyacente.",
+ sol:"tan 38° = h/25 ⇒ h = 25 · tan 38° ≈ 25 · 0,7813 ≈ 19,53 m."},
+{tema:"Elevación/depresión", type:"num", fig:svgLighthouse(),
+ stem:"Desde lo alto de un faro de 40 m se observa un barco con un ángulo de depresión de 22°. ¿A qué distancia horizontal del faro está el barco?", unit:"m", ans:99.00, tol:0.05,
+ errs:[{v:16.16,m:"Multiplicó por tan 22°. La altura (40 m) es el cateto opuesto y la distancia es el adyacente: d = 40 ÷ tan 22°."},
+       {v:106.78,m:"Usó sen 22°: así obtuvo la distancia en línea recta (hipotenusa), no la horizontal."},
+       {v:4518.93,m:"Su calculadora está en modo <b>RAD</b>. Cámbiela a DEG."}],
+ hint:"El ángulo de depresión es igual al ángulo de elevación desde el barco. Relacione la altura con la distancia horizontal.",
+ sol:"tan 22° = 40/d ⇒ d = 40 ÷ tan 22° ≈ 40 ÷ 0,4040 ≈ 99,00 m."},
+{tema:"Elevación/depresión", type:"num", fig:svgKite(),
+ stem:"Un niño sostiene el hilo de una cometa a 1,5 m del suelo. El hilo mide 50 m y forma un ángulo de elevación de 35°. ¿A qué altura del suelo está la cometa?", unit:"m", ans:30.18, tol:0.06,
+ errs:[{v:28.68,m:"Calculó bien la altura desde las manos, pero falta <b>sumar 1,5 m</b> para medir desde el suelo."},
+       {v:42.46,m:"Usó cos 35°. La altura es el cateto <b>opuesto</b> al ángulo: use sen."}],
+ hint:"Primero calcule la altura desde las manos del niño y luego sume su altura sobre el suelo.",
+ sol:"Altura desde las manos: 50 · sen 35° ≈ 50 · 0,5736 ≈ 28,68 m. Altura total: 28,68 + 1,5 ≈ 30,18 m."},
+
+/* ---------- Sección 4 ---------- */
+{sec:"4. Problemas de aplicación", tema:"Aplicación", type:"num",
+ stem:"Una escalera de 6 m se apoya en una pared y forma un ángulo de 70° con el suelo. ¿A qué altura de la pared llega la escalera?", unit:"m", ans:5.64, tol:0.05,
+ errs:[{v:2.05,m:"Usó cos 70°: así obtuvo la distancia del pie de la escalera a la pared. La altura es el cateto <b>opuesto</b> al ángulo."},
+       {v:4.64,m:"Su calculadora está en modo <b>RAD</b>. Cámbiela a DEG."}],
+ hint:"La escalera es la hipotenusa.",
+ sol:"sen 70° = h/6 ⇒ h = 6 · sen 70° ≈ 6 · 0,9397 ≈ 5,64 m."},
+{tema:"Aplicación", type:"num",
+ stem:"Una rampa de 8 m de longitud permite subir 1,2 m. ¿Qué ángulo forma la rampa con el suelo?", unit:"°", ans:8.63, tol:0.05,
+ errs:[{v:8.53,m:"Usó tangente, pero los 8 m son la longitud de la rampa (hipotenusa), no la distancia horizontal. Use sen⁻¹."},
+       {v:81.37,m:"Usó cos⁻¹: ese es el ángulo con la pared vertical. La altura es el cateto opuesto: use sen⁻¹."}],
+ hint:"Conoce el cateto opuesto (1,2 m) y la hipotenusa (8 m).",
+ sol:"sen θ = 1,2/8 = 0,15 ⇒ θ = sen⁻¹(0,15) ≈ 8,63°."},
+{tema:"Aplicación", type:"num", fig:svgBuildings(),
+ stem:"Desde la azotea de un edificio de 30 m, una persona ve la base de otro edificio con un ángulo de depresión de 40° y la parte más alta con un ángulo de elevación de 20°. <br><b>a)</b> ¿Cuál es la distancia horizontal entre los edificios?", unit:"m", ans:35.75, tol:0.06,
+ errs:[{v:25.17,m:"Multiplicó por tan 40°. La altura (30 m) es el cateto opuesto: d = 30 ÷ tan 40°."},
+       {v:-26.85,m:"Su calculadora está en modo <b>RAD</b>. Cámbiela a DEG."}],
+ hint:"Use el triángulo inferior: altura 30 m, ángulo de depresión 40°.",
+ sol:"tan 40° = 30/d ⇒ d = 30 ÷ tan 40° ≈ 30 ÷ 0,8391 ≈ 35,75 m."},
+{tema:"Aplicación", type:"num", fig:svgBuildings(),
+ stem:"Con la situación anterior: <b>b)</b> ¿Cuál es la altura total del segundo edificio?", unit:"m", ans:43.01, tol:0.08,
+ errs:[{v:13.01,m:"Calculó bien la parte que está por encima de la persona, pero falta <b>sumar los 30 m</b> del primer edificio."}],
+ hint:"Con la distancia del inciso a), use el triángulo superior y tan 20°. Luego sume la altura del primer edificio.",
+ sol:"Parte superior: 35,75 · tan 20° ≈ 35,75 · 0,3640 ≈ 13,01 m. Altura total: 30 + 13,01 ≈ 43,01 m."}
+];
+
+/* ===================== Lógica ===================== */
+const state=Q.map(()=>({tries:0,correct:false,firstOk:null}));
+const quiz=document.getElementById("quiz");
+
+function render(){
+  let html="";
+  Q.forEach((q,i)=>{
+    if(q.sec) html+=`<h2>${q.sec}</h2>`;
+    html+=`<div class="q" id="q${i}">
+      <div class="qhead"><span class="qnum">Pregunta ${i+1}</span><span class="tag">${q.type==="mc"?"Selección única":"Respuesta numérica"}</span></div>
+      <p class="stem">${q.stem}</p>
+      ${q.fig?`<div class="fig">${q.fig}</div>`:""}`;
+    if(q.type==="mc"){
+      html+=`<div class="opts">`+q.opts.map((o,k)=>`<label class="opt" id="o${i}_${k}"><input type="radio" name="r${i}" value="${k}"> <span>${"abcd"[k]})</span> <span>${o}</span></label>`).join("")+`</div>`;
+    }else{
+      html+=`<div class="numrow"><input type="text" inputmode="decimal" id="n${i}" placeholder="Respuesta" aria-label="Respuesta pregunta ${i+1}"><span class="unit">${q.unit||""}</span></div>`;
+    }
+    html+=`<div class="actions"><button onclick="check(${i})">Revisar</button><button class="ghost" id="s${i}" onclick="toggleSol(${i})" disabled>Ver solución</button></div>
+      <div class="fb" id="f${i}"></div><div class="sol" id="sol${i}"><b>Solución:</b> ${q.sol}</div></div>`;
+  });
+  quiz.innerHTML=html;
+}
+
+function parseNum(s){ s=(s||"").trim().replace(/\s/g,"").replace(",","."); if(s==="") return NaN; return Number(s); }
+
+function check(i){
+  const q=Q[i], st=state[i], fb=document.getElementById("f"+i), card=document.getElementById("q"+i);
+  let ok=false, msg="", cls="bad";
+  if(q.type==="mc"){
+    const sel=document.querySelector(`input[name=r${i}]:checked`);
+    if(!sel){ show(fb,"warn","Seleccione una opción antes de revisar."); return; }
+    const k=+sel.value;
+    q.opts.forEach((_,j)=>document.getElementById(`o${i}_${j}`).classList.remove("sel-ok","sel-bad"));
+    ok=(k===q.ans);
+    document.getElementById(`o${i}_${k}`).classList.add(ok?"sel-ok":"sel-bad");
+    msg= ok ? "¡Correcto!" : (q.fb[k]||"Revise su procedimiento.");
+  }else{
+    const v=parseNum(document.getElementById("n"+i).value);
+    if(isNaN(v)){ show(fb,"warn","Escriba un número (puede usar coma o punto decimal)."); return; }
+    ok=Math.abs(v-q.ans)<=q.tol;
+    if(ok){ msg="¡Correcto!"; }
+    else{
+      const e=(q.errs||[]).find(e=>Math.abs(v-e.v)<=Math.max(0.06,Math.abs(e.v)*0.003));
+      if(e) msg=e.m;
+      else if(Math.abs(v-q.ans)<=Math.max(0.3,q.ans*0.01)) { msg="Está muy cerca. Revise el redondeo: use la calculadora sin redondear pasos intermedios y escriba dos decimales."; cls="warn"; }
+      else msg="Todavía no. Pista: "+q.hint;
+    }
+  }
+  st.tries++;
+  if(st.firstOk===null) st.firstOk=ok;
+  st.correct=ok;
+  if(ok) cls="ok";
+  card.classList.remove("ok","bad"); card.classList.add(ok?"ok":"bad");
+  const extra = (!ok && st.tries>=2) ? "<br><small>Ya puede consultar la solución con el botón «Ver solución».</small>" : "";
+  show(fb,cls,`<b>${ok?"✔":"✘"}</b> <span class="fbtext">${msg}</span>${extra}`);
+  document.getElementById("s"+i).disabled = !(ok || st.tries>=2);
+  updateScore();
+}
+function show(el,cls,html){ el.className="fb show "+cls; el.innerHTML=html; }
+function toggleSol(i){ document.getElementById("sol"+i).classList.toggle("show"); }
+
+function updateScore(){
+  const done=state.filter(s=>s.correct).length;
+  document.getElementById("score").textContent=`${done} / ${Q.length} correctas`;
+  document.getElementById("barFill").style.width=(100*done/Q.length)+"%";
+}
+
+function showReport(){
+  const name=document.getElementById("nombre").value.trim()||"(sin nombre)";
+  const first=state.filter(s=>s.firstOk).length, now=state.filter(s=>s.correct).length;
+  const answered=state.filter(s=>s.tries>0).length;
+  document.getElementById("reportHead").innerHTML=
+    `<b>Estudiante:</b> ${escapeHtml(name)}<br><b>Respondidas:</b> ${answered} de ${Q.length} · <b>Correctas al primer intento:</b> ${first} · <b>Correctas al final:</b> ${now}<br><b>Fecha:</b> ${new Date().toLocaleString("es-CR")}`;
+  document.getElementById("reportBody").innerHTML=Q.map((q,i)=>{
+    const s=state[i]; const r=s.tries===0?"Sin responder":(s.correct?"Correcta":"Incorrecta");
+    return `<tr><td>${i+1}</td><td>${q.tema}</td><td>${r}</td><td>${s.tries}</td></tr>`;}).join("");
+  const rep=document.getElementById("report"); rep.classList.add("show"); rep.scrollIntoView({behavior:"smooth"});
+}
+function copyReport(){
+  const name=document.getElementById("nombre").value.trim()||"(sin nombre)";
+  const lines=[`Práctica Trigonometría - ${name}`, `Correctas al primer intento: ${state.filter(s=>s.firstOk).length}/${Q.length}`, `Correctas al final: ${state.filter(s=>s.correct).length}/${Q.length}`];
+  Q.forEach((q,i)=>{const s=state[i]; lines.push(`${i+1}. ${q.tema}: ${s.tries===0?"sin responder":(s.correct?"correcta":"incorrecta")} (${s.tries} intentos)`);});
+  navigator.clipboard?.writeText(lines.join("\n")).then(()=>alert("Resumen copiado. Puede pegarlo y enviarlo al profesor."));
+}
+function escapeHtml(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function resetAll(){
+  if(!confirm("¿Borrar todas sus respuestas y empezar de nuevo?")) return;
+  state.forEach(s=>{s.tries=0;s.correct=false;s.firstOk=null;});
+  render(); updateScore(); document.getElementById("report").classList.remove("show");
+  window.scrollTo({top:0});
+}
+render(); updateScore();
+</script>
+</body>
+</html>
